@@ -43,16 +43,16 @@
     self.characterCountLabel.textColor = [UIColor darkGrayColor];
 	[accessoryView addSubview:self.characterCountLabel];
 
-    self.textView.inputAccessoryView = accessoryView;
+    //self.textView.inputAccessoryView = accessoryView;
 
-    [self updateCharacterCountLabel];
-    [self checkCharacterCount];
+   // [self updateCharacterCountLabel];
+    //[self checkCharacterCount];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    [self.textView becomeFirstResponder];
+    [self.name becomeFirstResponder];
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -76,16 +76,16 @@
 
 - (IBAction)postPost:(id)sender {
     // Resign first responder to dismiss the keyboard and capture in-flight autocorrect suggestions
-    [self.textView resignFirstResponder];
+    [self.name resignFirstResponder];
 
     // Capture current text field contents:
-    [self updateCharacterCountLabel];
+    /*[self updateCharacterCountLabel];
     BOOL isAcceptableAfterAutocorrect = [self checkCharacterCount];
 
     if (!isAcceptableAfterAutocorrect) {
         [self.textView becomeFirstResponder];
         return;
-    }
+    }*/
 
     // Data prep:
     CLLocation *currentLocation = [self.dataSource currentLocationForWallPostCrateViewController:self];
@@ -95,9 +95,11 @@
     PFUser *user = [PFUser currentUser];
 
     // Stitch together a postObject and send this async to Parse
-    PFObject *postObject = [PFObject objectWithClassName:PAWParsePostsClassName];
-    postObject[PAWParsePostTextKey] = self.textView.text;
-    postObject[PAWParsePostUserKey] = user;
+    PFObject *postObject = [PFObject objectWithClassName:@"Place"];
+    postObject[PAWParsePostTextKey] = self.name.text;
+	PFRelation *relation = [postObject relationForKey:@"createdBy"];
+	[relation addObject:user];
+	
     postObject[PAWParsePostLocationKey] = currentPoint;
 
     // Use PFACL to restrict future modifications to this object.
@@ -119,8 +121,39 @@
             return;
         }
         if (succeeded) {
-            NSLog(@"Successfully saved!");
+            NSLog(@"Successfully saved place!");
             NSLog(@"%@", postObject);
+			
+			PFObject *ratingObject = [PFObject objectWithClassName:@"Rating"];
+			NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+			[f setNumberStyle:NSNumberFormatterDecimalStyle];
+			NSNumber *myRating = [f numberFromString:self.rating.text];
+			ratingObject[@"stars"] = myRating;
+			ratingObject[@"comment"] = self.comment.text;
+			
+			PFRelation *relation = [ratingObject relationForKey:@"user"];
+			[relation addObject:user];
+			
+			PFRelation *relationPlace = [ratingObject relationForKey:@"place"];
+			[relationPlace addObject:postObject];
+			
+			[ratingObject saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+				if (error) {
+					NSLog(@"Couldn't save!");
+					NSLog(@"%@", error);
+					UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[error userInfo][@"error"]
+																		message:nil
+																	   delegate:self
+															  cancelButtonTitle:nil
+															  otherButtonTitles:@"Ok", nil];
+					[alertView show];
+					return;
+				}
+				if (succeeded) {
+				
+				}
+			}];
+			
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:PAWPostCreatedNotification object:nil];
             });
@@ -136,8 +169,8 @@
 #pragma mark UITextViewDelegate
 
 - (void)textViewDidChange:(UITextView *)textView {
-    [self updateCharacterCountLabel];
-    [self checkCharacterCount];
+    //[self updateCharacterCountLabel];
+    //[self checkCharacterCount];
 }
 
 #pragma mark -
@@ -147,37 +180,13 @@
     if (self.maximumCharacterCount != maximumCharacterCount) {
         _maximumCharacterCount = maximumCharacterCount;
 
-        [self updateCharacterCountLabel];
-        [self checkCharacterCount];
+        //[self updateCharacterCountLabel];
+        //[self checkCharacterCount];
     }
 }
 
 #pragma mark -
 #pragma mark Private
 
-- (void)updateCharacterCountLabel {
-    NSUInteger count = [self.textView.text length];
-    self.characterCountLabel.text = [NSString stringWithFormat:@"%lu/%lu",
-                                (unsigned long)count,
-                                (unsigned long)self.maximumCharacterCount];
-    if (count > self.maximumCharacterCount || count == 0) {
-        self.characterCountLabel.font = [UIFont boldSystemFontOfSize:self.characterCountLabel.font.pointSize];
-    } else {
-        self.characterCountLabel.font = [UIFont systemFontOfSize:self.characterCountLabel.font.pointSize];
-    }
-}
-
-- (BOOL)checkCharacterCount {
-    BOOL enabled = NO;
-
-    NSUInteger count = [self.textView.text length];
-    if (count > 0 && count < self.maximumCharacterCount) {
-        enabled = YES;
-    }
-
-    self.postButton.enabled = enabled;
-
-    return enabled;
-}
 
 @end

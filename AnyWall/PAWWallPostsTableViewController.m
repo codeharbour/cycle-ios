@@ -10,6 +10,7 @@
 #import "PAWConstants.h"
 #import "PAWPost.h"
 #import "PAWPostTableViewCell.h"
+#import "PlaceViewController.h"
 
 static NSUInteger const PAWWallPostsTableViewMainSection = 0;
 
@@ -67,7 +68,7 @@ static NSUInteger const PAWWallPostsTableViewMainSection = 0;
     // Set up a view for empty content
     self.noDataButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.noDataButton setTintColor:[UIColor colorWithRed:43.0f/255.0f green:181.0f/255.0f blue:46.0f/255.0f alpha:1.0f]];
-    [self.noDataButton setTitle:@"Be the first to post in this area." forState:UIControlStateNormal];
+    [self.noDataButton setTitle:@"Be the first to post a fixie here" forState:UIControlStateNormal];
     [self.noDataButton addTarget:self.parentViewController
                           action:@selector(postButtonSelected:)
                 forControlEvents:UIControlEventTouchUpInside];
@@ -185,7 +186,19 @@ static NSUInteger const PAWWallPostsTableViewMainSection = 0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // call super because we're a custom subclass.
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-
+	
+	PlaceViewController *vc = [[PlaceViewController alloc] initWithNibName:@"PlaceViewController" bundle:nil];
+	PFObject *object = [self.objects objectAtIndex:indexPath.row];
+	
+	[self presentViewController:vc animated:YES completion:nil];
+	vc.name.text = object[@"name"];
+	PFQuery *query = [PFQuery queryWithClassName:@"Rating"];
+	[query whereKey:@"place" equalTo:object];
+ 
+	[query findObjectsInBackgroundWithBlock:^(NSArray *ratings, NSError *error) {
+		vc.ratings = ratings;
+		[vc.review reloadData];
+	}];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 

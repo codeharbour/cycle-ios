@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlaceViewController">
+            <connections>
+                <outlet property="name" destination="ba1-hn-Cdg" id="caf-zs-wjJ"/>
+                <outlet property="review" destination="pwe-s2-ozD" id="CNZ-xo-q3L"/>
+                <outlet property="view" destination="iN0-l3-epB" id="pRf-jR-nN3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Place name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ba1-hn-Cdg">
+                    <rect key="frame" x="49" y="48" width="126" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="pwe-s2-ozD">
+                    <rect key="frame" x="21" y="102" width="300" height="300"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nke-O8-qx6">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                    <items>
+                        <navigationItem title="Place" id="Vgl-mV-bU8">
+                            <barButtonItem key="backBarButtonItem" title="Back" id="iFK-gS-B9A"/>
+                        </navigationItem>
+                    </items>
+                </navigationBar>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="nke-O8-qx6" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="R4e-H5-YWa"/>
+                <constraint firstItem="nke-O8-qx6" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ZWa-7a-dlw"/>
+                <constraint firstAttribute="trailing" secondItem="nke-O8-qx6" secondAttribute="trailing" id="xX4-th-fdi"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

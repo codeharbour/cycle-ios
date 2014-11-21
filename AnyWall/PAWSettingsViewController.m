@@ -154,7 +154,7 @@ static uint16_t const PAWSettingsTableViewLogoutNumberOfRows = 1;
         }
 
         // Configure the cell.
-        cell.textLabel.text = @"Log out of Anywall";
+        cell.textLabel.text = @"Log out of Fixie";
         cell.textLabel.textAlignment = NSTextAlignmentCenter;
 
         return cell;

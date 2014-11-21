@@ -19,7 +19,9 @@
 
 @property (nonatomic, weak) id<PAWWallPostCreateViewControllerDataSource> dataSource;
 
-@property (nonatomic, strong) IBOutlet UITextView *textView;
+@property (nonatomic, strong) IBOutlet UITextField *name;
+@property (nonatomic, strong) IBOutlet UITextField *rating;
+@property (nonatomic, strong) IBOutlet UITextField *comment;
 @property (nonatomic, strong) IBOutlet UILabel *characterCountLabel;
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *postButton;
 

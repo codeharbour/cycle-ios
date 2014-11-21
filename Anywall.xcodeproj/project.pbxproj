@@ -17,6 +17,8 @@
 		81E5F12C1997DB240079429B /* PAWPostTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 81E5F12B1997DB240079429B /* PAWPostTableViewCell.m */; };
 		81E5F12E1997EF760079429B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E5F12D1997EF760079429B /* QuartzCore.framework */; };
 		C4FD6130172751E200F61563 /* PAWWallPostsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E572726A14E0807F004A9423 /* PAWWallPostsTableViewController.m */; };
+		E4340C691A1FDB95001A393E /* PlaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4340C681A1FDB95001A393E /* PlaceViewController.m */; };
+		E4340C6D1A1FDBE3001A393E /* PlaceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4340C6C1A1FDBE3001A393E /* PlaceViewController.xib */; };
 		E5458B6614D77BEA003BE4FF /* PAWSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5458B6414D77BEA003BE4FF /* PAWSettingsViewController.m */; };
 		E5458B6714D77BEA003BE4FF /* PAWSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5458B6514D77BEA003BE4FF /* PAWSettingsViewController.xib */; };
 		E5458B6C14D8B2E3003BE4FF /* PAWWallPostCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5458B6A14D8B2E3003BE4FF /* PAWWallPostCreateViewController.m */; };
@@ -59,6 +61,9 @@
 		81E5F12A1997DB240079429B /* PAWPostTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAWPostTableViewCell.h; sourceTree = "<group>"; };
 		81E5F12B1997DB240079429B /* PAWPostTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAWPostTableViewCell.m; sourceTree = "<group>"; };
 		81E5F12D1997EF760079429B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		E4340C671A1FDB95001A393E /* PlaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceViewController.h; sourceTree = "<group>"; };
+		E4340C681A1FDB95001A393E /* PlaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceViewController.m; sourceTree = "<group>"; };
+		E4340C6C1A1FDBE3001A393E /* PlaceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceViewController.xib; sourceTree = "<group>"; };
 		E5458B6314D77BEA003BE4FF /* PAWSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PAWSettingsViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		E5458B6414D77BEA003BE4FF /* PAWSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PAWSettingsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		E5458B6514D77BEA003BE4FF /* PAWSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PAWSettingsViewController.xib; sourceTree = "<group>"; };
@@ -229,6 +234,7 @@
 				E56E83FF14D72E1100E856AB /* InfoPlist.strings */,
 				E56E840214D72E1100E856AB /* main.m */,
 				74D131E71582A7550065F1D2 /* Anywall-Prefix.pch */,
+				E4340C6C1A1FDBE3001A393E /* PlaceViewController.xib */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -282,6 +288,8 @@
 				E5458B6A14D8B2E3003BE4FF /* PAWWallPostCreateViewController.m */,
 				E572726914E0807F004A9423 /* PAWWallPostsTableViewController.h */,
 				E572726A14E0807F004A9423 /* PAWWallPostsTableViewController.m */,
+				E4340C671A1FDB95001A393E /* PlaceViewController.h */,
+				E4340C681A1FDB95001A393E /* PlaceViewController.m */,
 			);
 			name = "AnyWall View and Posts";
 			sourceTree = "<group>";
@@ -325,7 +333,7 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Parse Inc.";
 			};
-			buildConfigurationList = E56E83EC14D72E1100E856AB /* Build configuration list for PBXProject "AnyWall" */;
+			buildConfigurationList = E56E83EC14D72E1100E856AB /* Build configuration list for PBXProject "Anywall" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -353,6 +361,7 @@
 				E5458B6714D77BEA003BE4FF /* PAWSettingsViewController.xib in Resources */,
 				E5458B6D14D8B2E3003BE4FF /* PAWWallPostCreateViewController.xib in Resources */,
 				E5C3305114DA024F00089B64 /* PAWLoginViewController.xib in Resources */,
+				E4340C6D1A1FDBE3001A393E /* PlaceViewController.xib in Resources */,
 				E5E3D1F314DA20220074DA18 /* PAWNewUserViewController.xib in Resources */,
 				74D131E61582A7420065F1D2 /* Anywall-Info.plist in Resources */,
 			);
@@ -377,6 +386,7 @@
 				E554D5C314E32EFB008D027A /* PAWPost.m in Sources */,
 				8136F91419B9EA1900F29B59 /* PAWConfigManager.m in Sources */,
 				C4FD6130172751E200F61563 /* PAWWallPostsTableViewController.m in Sources */,
+				E4340C691A1FDB95001A393E /* PlaceViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -650,7 +660,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E56E83EC14D72E1100E856AB /* Build configuration list for PBXProject "AnyWall" */ = {
+		E56E83EC14D72E1100E856AB /* Build configuration list for PBXProject "Anywall" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E56E840E14D72E1100E856AB /* Debug */,
