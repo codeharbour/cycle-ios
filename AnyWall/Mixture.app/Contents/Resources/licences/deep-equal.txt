@@ -1,0 +1,4 @@
+license
+=======
+
+MIT. Derived largely from node's assert module.

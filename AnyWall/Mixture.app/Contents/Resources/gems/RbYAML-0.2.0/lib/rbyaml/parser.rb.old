@@ -1,0 +1,531 @@
+
+# YAML can be parsed by an LL(1) parser!
+#
+# We use the following production rules:
+# stream            ::= STREAM-START implicit_document? explicit_document* STREAM-END
+# explicit_document ::= DIRECTIVE* DOCUMENT-START block_node? DOCUMENT-END?
+# implicit_document ::= block_node DOCUMENT-END?
+# block_node    ::= ALIAS | properties? block_content
+# flow_node     ::= ALIAS | properties? flow_content
+# properties    ::= TAG ANCHOR? | ANCHOR TAG?
+# block_content     ::= block_collection | flow_collection | SCALAR
+# flow_content      ::= flow_collection | SCALAR
+# block_collection  ::= block_sequence | block_mapping
+# block_sequence    ::= BLOCK-SEQUENCE-START (BLOCK-ENTRY block_node?)* BLOCK-END
+# block_mapping     ::= BLOCK-MAPPING_START ((KEY block_node_or_indentless_sequence?)? (VALUE block_node_or_indentless_sequence?)?)* BLOCK-END
+# block_node_or_indentless_sequence ::= ALIAS | properties? (block_content | indentless_block_sequence)
+# indentless_block_sequence         ::= (BLOCK-ENTRY block_node?)+
+# flow_collection   ::= flow_sequence | flow_mapping
+# flow_sequence     ::= FLOW-SEQUENCE-START (flow_sequence_entry FLOW-ENTRY)* flow_sequence_entry? FLOW-SEQUENCE-END
+# flow_mapping      ::= FLOW-MAPPING-START (flow_mapping_entry FLOW-ENTRY)* flow_mapping_entry? FLOW-MAPPING-END
+# flow_sequence_entry   ::= flow_node | KEY flow_node? (VALUE flow_node?)?
+# flow_mapping_entry    ::= flow_node | KEY flow_node? (VALUE flow_node?)?
+
+# TODO: support for BOM within a stream.
+# stream ::= (BOM? implicit_document)? (BOM? explicit_document)* STREAM-END
+
+# FIRST sets:
+# stream: { STREAM-START }
+# explicit_document: { DIRECTIVE DOCUMENT-START }
+# implicit_document: FIRST(block_node)
+# block_node: { ALIAS TAG ANCHOR SCALAR BLOCK-SEQUENCE-START BLOCK-MAPPING-START FLOW-SEQUENCE-START FLOW-MAPPING-START }
+# flow_node: { ALIAS ANCHOR TAG SCALAR FLOW-SEQUENCE-START FLOW-MAPPING-START }
+# block_content: { BLOCK-SEQUENCE-START BLOCK-MAPPING-START FLOW-SEQUENCE-START FLOW-MAPPING-START SCALAR }
+# flow_content: { FLOW-SEQUENCE-START FLOW-MAPPING-START SCALAR }
+# block_collection: { BLOCK-SEQUENCE-START BLOCK-MAPPING-START }
+# flow_collection: { FLOW-SEQUENCE-START FLOW-MAPPING-START }
+# block_sequence: { BLOCK-SEQUENCE-START }
+# block_mapping: { BLOCK-MAPPING-START }
+# block_node_or_indentless_sequence: { ALIAS ANCHOR TAG SCALAR BLOCK-SEQUENCE-START BLOCK-MAPPING-START FLOW-SEQUENCE-START FLOW-MAPPING-START BLOCK-ENTRY }
+# indentless_sequence: { ENTRY }
+# flow_collection: { FLOW-SEQUENCE-START FLOW-MAPPING-START }
+# flow_sequence: { FLOW-SEQUENCE-START }
+# flow_mapping: { FLOW-MAPPING-START }
+# flow_sequence_entry: { ALIAS ANCHOR TAG SCALAR FLOW-SEQUENCE-START FLOW-MAPPING-START KEY }
+# flow_mapping_entry: { ALIAS ANCHOR TAG SCALAR FLOW-SEQUENCE-START FLOW-MAPPING-START KEY }
+
+require 'rbyaml/error'
+require 'rbyaml/tokens'
+require 'rbyaml/events'
+require 'rbyaml/scanner'
+
+module RbYAML
+  class ParserError < MarkedYAMLError
+  end
+
+  class Parser
+    DEFAULT_TAGS = {
+      '!' => '!',
+      '!!' => 'tag:yaml.org,2002:'
+    }
+
+    def initialize(scanner)
+      @scanner = scanner
+      @current_event = nil
+      @yaml_version = nil
+#      @events = nil
+      @working_events = nil
+      @tag_handles = { }
+    end
+
+    def check_event(*choices):
+        # Check the type of the next event.
+        if self.current_event is None:
+            try:
+                self.current_event = self.event_generator.next()
+            except StopIteration:
+                pass
+        if self.current_event is not None:
+            if not choices:
+                return True
+            for choice in choices:
+                if isinstance(self.current_event, choice):
+                    return True
+        return False
+
+    def peek_event(self):
+        # Get the next event.
+        if self.current_event is None:
+            try:
+                self.current_event = self.event_generator.next()
+            except StopIteration:
+                pass
+        return self.current_event
+
+    def get_event(self):
+        # Get the next event.
+        if self.current_event is None:
+            try:
+                self.current_event = self.event_generator.next()
+            except StopIteration:
+                pass
+        value = self.current_event
+        print("current_event: %s" % value)
+        self.current_event = None
+        return value
+
+#    def check_event(*choices)
+#      init_events
+#      @current_event = @working_events.shift if @current_event.nil?
+#      if @current_event
+#        return true if choices.empty?
+#        for choice in choices
+#          return true if choice === @current_event
+#        end
+#      end
+#      false
+#    end
+
+#    def peek_event
+#      init_events
+#      @current_event = @working_events.shift if @current_event.nil?
+#      @current_event
+#    end
+
+#    def get_event
+#      init_events
+#      @current_event = @working_events.shift if @current_event.nil?
+#      value = @current_event
+#      @current_event = nil
+#      value
+#    end
+
+#    def init_events
+#      @events ||= parse_stream
+#      @working_events ||= @events        
+#    end
+    
+    def each_event(&block)
+#      init_events
+      parse_stream(&block)
+#      @events.each(&block)
+    end
+
+    def parse_stream
+      # STREAM-START implicit_document? explicit_document* STREAM-END
+      
+      # Parse start of stream.
+      events = []
+      token = @scanner.get_token
+      events << StreamStartEvent.new(token.start_mark, token.end_mark,token.encoding)
+      
+      # Parse implicit document.
+      unless @scanner.check_token(DirectiveToken, DocumentStartToken,StreamEndToken)
+        @tag_handles = DEFAULT_TAGS
+        token = @scanner.peek_token
+        start_mark = end_mark = token.start_mark
+        events << DocumentStartEvent.new(start_mark, end_mark,false)
+        events += parse_block_node
+        token = @scanner.peek_token
+        start_mark = end_mark = token.start_mark
+        explicit = false
+        while @scanner.check_token(DocumentEndToken)
+          token = @scanner.get_token
+          end_mark = token.end_mark
+          explicit = true
+        end
+        events << DocumentEndEvent.new(start_mark, end_mark,explicit)
+      end
+
+      # Parse explicit documents.
+      while !@scanner.check_token(StreamEndToken)
+        token = @scanner.peek_token
+        start_mark = token.start_mark
+        version, tags = process_directives
+        raise ParserError.new(nil, nil,"expected '<document start>', but found #{peek_token.id}",@scanner.peek_token.start_mark) unless @scanner.check_token(DocumentStartToken)
+        token = @scanner.get_token
+        end_mark = token.end_mark
+        events << DocumentStartEvent.new(start_mark, end_mark,true,version,tags)
+        if @scanner.check_token(DirectiveToken,DocumentStartToken, DocumentEndToken, StreamEndToken)
+          events << process_empty_scalar(token.end_mark)
+        else
+          events += parse_block_node
+        end
+        token = @scanner.peek_token
+        start_mark = end_mark = token.start_mark
+        explicit = false
+        while @scanner.check_token(DocumentEndToken)
+          token = @scanner.get_token
+          end_mark = token.end_mark
+          explicit=true
+        end
+        events << DocumentEndEvent.new(start_mark, end_mark,explicit)
+      end
+      # Parse end of stream.
+      token = @scanner.get_token
+      events << StreamEndEvent.new(token.start_mark, token.end_mark)
+      events
+    end
+
+    def process_directives
+      # DIRECTIVE*
+      while @scanner.check_token(DirectiveToken)
+        token = @scanner.get_token
+        if token.name == "YAML"
+          raise ParserError.new(nil, nil,"found duplicate YAML directive", token.start_mark) if !@yaml_version.nil?
+          major, minor = token.value[0].to_i, token.value[1].to_i
+          raise ParserError.new(nil,nil,"found incompatible YAML document (version 1.* is required)",token.start_mark) if major != 1
+          @yaml_version = [major,minor]
+        elsif token.name == "TAG"
+          handle, prefix = token.value
+          raise ParserError.new(nil,nil,"duplicate tag handle #{handle}",token.start_mark) if @tag_handles.member?(handle)
+          @tag_handles[handle] = prefix
+        end
+      end
+      if !@tag_handles.empty?
+        value = @yaml_version, @tag_handles.dup
+      else
+        value = @yaml_version, nil
+      end
+      for key in DEFAULT_TAGS.keys
+        @tag_handles[key] = DEFAULT_TAGS[key] if !@tag_handles.include?(key)
+      end
+      value
+    end
+
+    def parse_block_node
+      parse_node(true)
+    end
+    
+    def parse_flow_node
+      parse_node
+    end
+    
+    def parse_block_node_or_indentless_sequence
+      parse_node(true, true)
+    end
+
+    def parse_node(block=false, indentless_sequence=false)
+      # block_node    ::= ALIAS | properties? block_content
+      # flow_node     ::= ALIAS | properties? flow_content
+      # properties    ::= TAG ANCHOR? | ANCHOR TAG?
+      # block_content     ::= block_collection | flow_collection | SCALAR
+      # flow_content      ::= flow_collection | SCALAR
+      # block_collection  ::= block_sequence | block_mapping
+      # block_node_or_indentless_sequence ::= ALIAS | properties?
+      #                                       (block_content | indentless_block_sequence)
+      events = []
+      if @scanner.check_token(AliasToken)
+        token = @scanner.get_token
+        events << AliasEvent.new(token.value, token.start_mark, token.end_mark)
+      else
+        anchor = nil
+        tag = nil
+        start_mark = end_mark = tag_mark = nil
+        if @scanner.check_token(AnchorToken)
+          token = @scanner.get_token
+          start_mark = token.start_mark
+          end_mark = token.end_mark
+          anchor = token.value
+          if @scanner.check_token(TagToken)
+            token = @scanner.get_token
+            tag_mark = token.start_mark
+            end_mark = token.end_mark
+            tag = token.value
+          end
+        elsif @scanner.check_token(TagToken)
+          token = @scanner.get_token
+          start_mark = tag_mark = token.start_mark
+          end_mark = token.end_mark
+          tag = token.value
+          if @scanner.check_token(AnchorToken)
+            token = @scanner.get_token
+            end_mark = token.end_mark
+            anchor = token.value
+          end
+        end
+
+        if !tag.nil? and tag != "!"
+          handle, suffix = tag
+          if !handle.nil?
+            raise ParserError.new("while parsing a node", start_mark,"found undefined tag handle #{handle}",tag_mark) if !@tag_handles.include?(handle)
+            tag = @tag_handles[handle]+suffix
+          else
+            tag = suffix
+          end
+        end
+
+        #if tag == u'!':
+        #    raise ParserError("while parsing a node", start_mark,
+        #            "found non-specific tag '!'", tag_mark,
+        #            "Please check 'http://pyyaml.org/wiki/YAMLNonSpecificTag' and share your opinion.")
+        if start_mark.nil?
+          start_mark = end_mark = @scanner.peek_token.start_mark
+        end
+        event = nil
+        collection_events = nil
+        implicit = tag.nil? || tag == ?!
+        if indentless_sequence && @scanner.check_token(BlockEntryToken)
+          end_mark = peek_token.end_mark
+          event = SequenceStartEvent.new(anchor, tag, implicit, start_mark, end_mark)
+          collection_events = parse_indentless_sequence
+        else
+          if @scanner.check_token(ScalarToken)
+            token = @scanner.get_token
+            end_mark = token.end_mark
+            if (token.plain && tag.nil?) || tag == ?!
+              implicit = [true, false]
+            elsif tag.nil?
+              implicit = [false, true]
+            else
+              implicit = [false, false]
+            end
+            event = ScalarEvent.new(anchor, tag, implicit, token.value,start_mark, end_mark,token.style)
+          elsif @scanner.check_token(FlowSequenceStartToken)
+            end_mark = @scanner.peek_token.end_mark
+            event = SequenceStartEvent.new(anchor, tag, implicit, start_mark, end_mark,true)
+            collection_events = parse_flow_sequence
+          elsif @scanner.check_token(FlowMappingStartToken)
+            end_mark = @scanner.peek_token.end_mark
+            event = MappingStartEvent.new(anchor, tag, implicit, start_mark, end_mark,true)
+            collection_events = parse_flow_mapping
+          elsif block && @scanner.check_token(BlockSequenceStartToken)
+            end_mark = @scanner.peek_token.start_mark
+            event = SequenceStartEvent.new(anchor, tag, implicit, start_mark, end_mark,false)
+            collection_events = parse_block_sequence
+          elsif block && @scanner.check_token(BlockMappingStartToken)
+            end_mark = @scanner.peek_token.start_mark
+            event = MappingStartEvent.new(anchor, tag, implicit, start_mark, end_mark,false)
+            collection_events = parse_block_mapping
+          elsif !anchor.nil? || !tag.nil?
+            # Empty scalars are allowed even if a tag or an anchor is
+            # specified.
+            event = ScalarEvent.new(anchor, tag, [implicit,false],"",start_mark, end_mark)
+          else
+            if block
+              node = "block"
+            else
+              node = "flow"
+            end
+            token = @scanner.peek_token
+            raise ParserError.new("while scanning a #{node} node", start_mark,"expected the node content, but found #{token.tid}",token.start_mark)
+          end
+        end
+        events << event
+        events += collection_events if collection_events
+      end
+      events
+    end
+
+    def parse_block_sequence
+      # BLOCK-SEQUENCE-START (BLOCK-ENTRY block_node?)* BLOCK-END
+      events = []
+      token = @scanner.get_token
+      start_mark = token.start_mark
+      while @scanner.check_token(BlockEntryToken)
+        token = @scanner.get_token
+        if !@scanner.check_token(BlockEntryToken, BlockEndToken)
+          events += parse_block_node
+        else
+          events << process_empty_scalar(token.end_mark)
+        end
+      end
+      if !@scanner.check_token(BlockEndToken)
+        token = @scanner.peek_token
+        raise ParserError.new("while scanning a block collection", start_mark,"expected <block end>, but found #{token.tid}", token.start_mark)
+      end
+      token = @scanner.get_token
+      events << SequenceEndEvent.new(token.start_mark, token.end_mark)
+      events
+    end
+
+    def parse_indentless_sequence
+      # (BLOCK-ENTRY block_node?)+
+      events = []
+      while @scanner.check_token(BlockEntryToken)
+        token = @scanner.get_token
+        if !@scanner.check_token(BlockEntryToken,KeyToken, ValueToken, BlockEndToken)
+          events += parse_block_node
+        else
+          events << process_empty_scalar(token.end_mark)
+        end
+      end
+      token = @scanner.peek_token
+      events << SequenceEndEvent.new(token.start_mark, token.start_mark)
+      events
+    end
+
+
+    def parse_block_mapping
+      # BLOCK-MAPPING_START
+      #   ((KEY block_node_or_indentless_sequence?)?
+      #   (VALUE block_node_or_indentless_sequence?)?)*
+      # BLOCK-END
+      events = []
+      token = @scanner.get_token
+      start_mark = token.start_mark
+      while @scanner.check_token(KeyToken, ValueToken)
+        if @scanner.check_token(KeyToken)
+          token = @scanner.get_token
+          if !@scanner.check_token(KeyToken, ValueToken, BlockEndToken)
+            events += parse_block_node_or_indentless_sequence
+          else
+            events << process_empty_scalar(token.end_mark)
+          end
+        end
+        if @scanner.check_token(ValueToken)
+          token = @scanner.get_token
+          if !@scanner.check_token(KeyToken, ValueToken, BlockEndToken)
+            events += parse_block_node_or_indentless_sequence
+          else
+            events << process_empty_scalar(token.end_mark)
+          end
+        else
+          token = @scanner.peek_token
+          events << process_empty_scalar(token.start_mark)
+        end
+      end
+      if !@scanner.check_token(BlockEndToken)
+        token = @scanner.peek_token
+        raise ParserError.new("while scanning a block mapping", start_mark,"expected <block end>, but found #{token.tid}", token.start_mark)
+      end
+      token = @scanner.get_token
+      events << MappingEndEvent.new(token.start_mark, token.end_mark)
+      events
+    end
+
+    def parse_flow_sequence
+      # flow_sequence     ::= FLOW-SEQUENCE-START
+      #                       (flow_sequence_entry FLOW-ENTRY)*
+      #                       flow_sequence_entry?
+      #                       FLOW-SEQUENCE-END
+      # flow_sequence_entry   ::= flow_node | KEY flow_node? (VALUE flow_node?)?
+      #
+      # Note that while production rules for both flow_sequence_entry and
+      # flow_mapping_entry are equal, their interpretations are different.
+      # For `flow_sequence_entry`, the part `KEY flow_node? (VALUE flow_node?)?`
+      # generate an inline mapping (set syntax).
+      events = []
+      token = @scanner.get_token
+      start_mark = token.start_mark
+      while !@scanner.check_token(FlowSequenceEndToken)
+        if @scanner.check_token(KeyToken)
+          token = @scanner.get_token
+          events << MappingStartEvent.new(nil,nil,true,token.start_mark, token.end_mark,true)
+          if !@scanner.check_token(ValueToken,FlowEntryToken, FlowSequenceEndToken)
+            events += parse_flow_node
+          else
+            events << process_empty_scalar(token.end_mark)
+          end
+          if @scanner.check_token(ValueToken)
+            token = @scanner.get_token
+            if !@scanner.check_token(FlowEntryToken, FlowSequenceEndToken)
+              events += parse_flow_node
+            else
+              events << process_empty_scalar(token.end_mark)
+            end
+          else
+            token = @scanner.peek_token
+            events << process_empty_scalar(token.start_mark)
+          end
+          token = @scanner.peek_token
+          events << MappingEndEvent.new(token.start_mark, token.start_mark)
+        else
+          events += parse_flow_node
+        end
+        if !@scanner.check_token(FlowEntryToken, FlowSequenceEndToken)
+          token = @scanner.peek_token
+          raise ParserError.new("while scanning a flow sequence", start_mark,"expected ',' or ']', but got #{token.tid}", token.start_mark)
+        end
+        if @scanner.check_token(FlowEntryToken)
+          @scanner.get_token
+        end
+      end
+      token = @scanner.get_token
+      events << SequenceEndEvent.new(token.start_mark, token.end_mark)
+      events
+    end
+    
+    def parse_flow_mapping
+      # flow_mapping      ::= FLOW-MAPPING-START
+      #                       (flow_mapping_entry FLOW-ENTRY)*
+      #                       flow_mapping_entry?
+      #                       FLOW-MAPPING-END
+      # flow_mapping_entry    ::= flow_node | KEY flow_node? (VALUE flow_node?)?
+      events = []
+      token = @scanner.get_token
+      start_mark = token.start_mark
+      while !@scanner.check_token(FlowMappingEndToken)
+        if @scanner.check_token(KeyToken)
+          token = @scanner.get_token
+          if !@scanner.check_token(ValueToken,FlowEntryToken, FlowMappingEndToken)
+            events += parse_flow_node
+          else
+            events << process_empty_scalar(token.end_mark)
+          end
+          if @scanner.check_token(ValueToken)
+            token = @scanner.get_token
+            if !@scanner.check_token(FlowEntryToken, FlowMappingEndToken)
+              events += parse_flow_node
+            else
+              events << process_empty_scalar(token.end_mark)
+            end
+          else
+            token = @scanner.peek_token
+            events << process_empty_scalar(token.start_mark)
+          end
+        else
+          events += parse_flow_node
+          events << process_empty_scalar(peek_token.start_mark)
+        end
+        if !@scanner.check_token(FlowEntryToken, FlowMappingEndToken)
+          token = @scanner.peek_token
+          raise ParserError.new("while scanning a flow mapping", start_mark,"expected ',' or '}', but got #{token.tid}", token.start_mark)
+        end
+        @scanner.get_token if @scanner.check_token(FlowEntryToken)
+      end
+      if !@scanner.check_token(FlowMappingEndToken)
+        token = @scanner.peek_token
+        raise ParserError.new("while scanning a flow mapping", start_mark,"expected '}', but found #{token.tid}", token.start_mark)
+      end
+      token = @scanner.get_token
+      events << MappingEndEvent.new(token.start_mark, token.end_mark)
+      events
+    end
+
+    def process_empty_scalar(mark)
+      ScalarEvent.new(nil, nil, [true, false], "", mark, mark)
+    end
+  end
+end
+

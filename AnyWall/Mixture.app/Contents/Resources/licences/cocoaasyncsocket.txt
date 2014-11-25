@@ -1,0 +1,3 @@
+CocoaAsyncSocket
+project is under Public Domain license.
+http://code.google.com/p/cocoaasyncsocket/

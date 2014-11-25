@@ -1,0 +1,2 @@
+Amazon AWS Toolkit
+Amazon http://aws.amazon.com/apache2.0
