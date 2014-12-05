@@ -15,6 +15,9 @@
 #import "PAWLoginViewController.h"
 #import "PAWSettingsViewController.h"
 #import "PAWWallViewController.h"
+#import "HomeViewController.h"
+#import "ChoiceViewController.h"
+#import "NewWithMapViewController.h"
 
 @interface PAWAppDelegate ()
 <PAWLoginViewControllerDelegate,
@@ -50,7 +53,7 @@ PAWSettingsViewControllerDelegate>
 
     if ([PFUser currentUser]) {
         // Present wall straight-away
-        [self presentWallViewControllerAnimated:NO];
+        [self presentHomeViewControllerAnimated:NO];
     } else {
         // Go to the welcome screen and have them log in or create an account.
         [self presentLoginViewController];
@@ -88,12 +91,40 @@ PAWSettingsViewControllerDelegate>
 }
 
 #pragma mark -
+#pragma mark HomeViewController
+
+- (void)presentHomeViewControllerAnimated:(BOOL)animated {
+	HomeViewController *homeViewController = [[HomeViewController alloc] initWithNibName:nil bundle:nil];
+	//homeViewController.delegate = self;
+	[self.navigationController setTitle:@"Fixie"];
+	[self.navigationController setViewControllers:@[ homeViewController ] animated:animated];
+}
+
+#pragma mark -
 #pragma mark WallViewController
 
 - (void)presentWallViewControllerAnimated:(BOOL)animated {
     PAWWallViewController *wallViewController = [[PAWWallViewController alloc] initWithNibName:nil bundle:nil];
     wallViewController.delegate = self;
     [self.navigationController setViewControllers:@[ wallViewController ] animated:animated];
+}
+
+- (void)presentChoiceViewControllerAnimated:(BOOL)animated {
+	ChoiceViewController *choiceViewController = [[ChoiceViewController alloc] initWithNibName:nil bundle:nil];
+	//wallViewController.delegate = self;
+	[self.navigationController setViewControllers:@[ choiceViewController ] animated:animated];
+}
+
+- (void)addNew{
+	
+	[self presentChoiceViewControllerAnimated:YES];
+
+}
+
+- (void)newWithMap{
+	NewWithMapViewController *newWithMapViewController = [[NewWithMapViewController alloc] initWithNibName:nil bundle:nil];
+	//wallViewController.delegate = self;
+	[self.navigationController setViewControllers:@[ newWithMapViewController ] animated:YES];
 }
 
 #pragma mark Delegate

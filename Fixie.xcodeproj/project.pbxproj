@@ -19,6 +19,12 @@
 		C4FD6130172751E200F61563 /* PAWWallPostsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E572726A14E0807F004A9423 /* PAWWallPostsTableViewController.m */; };
 		E4340C691A1FDB95001A393E /* PlaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4340C681A1FDB95001A393E /* PlaceViewController.m */; };
 		E4340C6D1A1FDBE3001A393E /* PlaceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4340C6C1A1FDBE3001A393E /* PlaceViewController.xib */; };
+		E4A477E51A31D8AD0000891A /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4A477E31A31D8AD0000891A /* HomeViewController.m */; };
+		E4A477E61A31D8AD0000891A /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4A477E41A31D8AD0000891A /* HomeViewController.xib */; };
+		E4DC6ADD1A31F7790085628D /* ChoiceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4DC6ADB1A31F7790085628D /* ChoiceViewController.m */; };
+		E4DC6ADE1A31F7790085628D /* ChoiceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4DC6ADC1A31F7790085628D /* ChoiceViewController.xib */; };
+		E4DC6AE21A3208360085628D /* NewWithMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4DC6AE01A3208360085628D /* NewWithMapViewController.m */; };
+		E4DC6AE31A3208360085628D /* NewWithMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4DC6AE11A3208360085628D /* NewWithMapViewController.xib */; };
 		E5458B6614D77BEA003BE4FF /* PAWSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5458B6414D77BEA003BE4FF /* PAWSettingsViewController.m */; };
 		E5458B6714D77BEA003BE4FF /* PAWSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5458B6514D77BEA003BE4FF /* PAWSettingsViewController.xib */; };
 		E5458B6C14D8B2E3003BE4FF /* PAWWallPostCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5458B6A14D8B2E3003BE4FF /* PAWWallPostCreateViewController.m */; };
@@ -64,6 +70,15 @@
 		E4340C671A1FDB95001A393E /* PlaceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceViewController.h; sourceTree = "<group>"; };
 		E4340C681A1FDB95001A393E /* PlaceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceViewController.m; sourceTree = "<group>"; };
 		E4340C6C1A1FDBE3001A393E /* PlaceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaceViewController.xib; sourceTree = "<group>"; };
+		E4A477E21A31D8AD0000891A /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
+		E4A477E31A31D8AD0000891A /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
+		E4A477E41A31D8AD0000891A /* HomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
+		E4DC6ADA1A31F7790085628D /* ChoiceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoiceViewController.h; sourceTree = "<group>"; };
+		E4DC6ADB1A31F7790085628D /* ChoiceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChoiceViewController.m; sourceTree = "<group>"; };
+		E4DC6ADC1A31F7790085628D /* ChoiceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChoiceViewController.xib; sourceTree = "<group>"; };
+		E4DC6ADF1A3208360085628D /* NewWithMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewWithMapViewController.h; sourceTree = "<group>"; };
+		E4DC6AE01A3208360085628D /* NewWithMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewWithMapViewController.m; sourceTree = "<group>"; };
+		E4DC6AE11A3208360085628D /* NewWithMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewWithMapViewController.xib; sourceTree = "<group>"; };
 		E5458B6314D77BEA003BE4FF /* PAWSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PAWSettingsViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		E5458B6414D77BEA003BE4FF /* PAWSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PAWSettingsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		E5458B6514D77BEA003BE4FF /* PAWSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PAWSettingsViewController.xib; sourceTree = "<group>"; };
@@ -217,6 +232,15 @@
 				E5CAAFF614D7342200D97A18 /* Controllers */,
 				81B86B5F1995802D00222BAB /* Resources */,
 				E56E83FD14D72E1100E856AB /* Supporting Files */,
+				E4A477E21A31D8AD0000891A /* HomeViewController.h */,
+				E4A477E31A31D8AD0000891A /* HomeViewController.m */,
+				E4A477E41A31D8AD0000891A /* HomeViewController.xib */,
+				E4DC6ADA1A31F7790085628D /* ChoiceViewController.h */,
+				E4DC6ADB1A31F7790085628D /* ChoiceViewController.m */,
+				E4DC6ADC1A31F7790085628D /* ChoiceViewController.xib */,
+				E4DC6ADF1A3208360085628D /* NewWithMapViewController.h */,
+				E4DC6AE01A3208360085628D /* NewWithMapViewController.m */,
+				E4DC6AE11A3208360085628D /* NewWithMapViewController.xib */,
 			);
 			name = Anywall;
 			path = AnyWall;
@@ -361,7 +385,10 @@
 				E5458B6714D77BEA003BE4FF /* PAWSettingsViewController.xib in Resources */,
 				E5458B6D14D8B2E3003BE4FF /* PAWWallPostCreateViewController.xib in Resources */,
 				E5C3305114DA024F00089B64 /* PAWLoginViewController.xib in Resources */,
+				E4DC6ADE1A31F7790085628D /* ChoiceViewController.xib in Resources */,
 				E4340C6D1A1FDBE3001A393E /* PlaceViewController.xib in Resources */,
+				E4DC6AE31A3208360085628D /* NewWithMapViewController.xib in Resources */,
+				E4A477E61A31D8AD0000891A /* HomeViewController.xib in Resources */,
 				E5E3D1F314DA20220074DA18 /* PAWNewUserViewController.xib in Resources */,
 				74D131E61582A7420065F1D2 /* Anywall-Info.plist in Resources */,
 			);
@@ -379,13 +406,16 @@
 				E5CAAFF414D733DC00D97A18 /* PAWWallViewController.m in Sources */,
 				E5458B6614D77BEA003BE4FF /* PAWSettingsViewController.m in Sources */,
 				E5458B6C14D8B2E3003BE4FF /* PAWWallPostCreateViewController.m in Sources */,
+				E4A477E51A31D8AD0000891A /* HomeViewController.m in Sources */,
 				E5C3305014DA024F00089B64 /* PAWLoginViewController.m in Sources */,
 				E5E3D1F214DA20220074DA18 /* PAWNewUserViewController.m in Sources */,
+				E4DC6AE21A3208360085628D /* NewWithMapViewController.m in Sources */,
 				81E5F12C1997DB240079429B /* PAWPostTableViewCell.m in Sources */,
 				E5AF78F314E0B725005B6234 /* PAWActivityView.m in Sources */,
 				E554D5C314E32EFB008D027A /* PAWPost.m in Sources */,
 				8136F91419B9EA1900F29B59 /* PAWConfigManager.m in Sources */,
 				C4FD6130172751E200F61563 /* PAWWallPostsTableViewController.m in Sources */,
+				E4DC6ADD1A31F7790085628D /* ChoiceViewController.m in Sources */,
 				E4340C691A1FDB95001A393E /* PlaceViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
