@@ -75,7 +75,7 @@ PAWWallPostCreateViewControllerDataSource>
     [self loadWallPostsTableViewController];
 
     // Set our nav bar items.
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Post"
+   /* self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Post"
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
                                                                              action:@selector(postButtonSelected:)];
@@ -83,7 +83,7 @@ PAWWallPostCreateViewControllerDataSource>
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:self
                                                                             action:@selector(settingsButtonSelected:)];
-
+*/
     self.mapView.region = MKCoordinateRegionMake(CLLocationCoordinate2DMake(37.332495f, -122.029095f),
                                                  MKCoordinateSpanMake(0.008516f, 0.021801f));
     self.mapPannedSinceLocationUpdate = NO;

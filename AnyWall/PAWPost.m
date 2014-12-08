@@ -85,6 +85,7 @@
         self.title = kPAWWallCantViewPost;
         self.subtitle = nil;
         self.pinColor = MKPinAnnotationColorRed;
+		
     } else {
         self.title = self.object[PAWParsePostTextKey];
         self.subtitle = self.object[PAWParsePostUserKey][PAWParsePostNameKey] ?:

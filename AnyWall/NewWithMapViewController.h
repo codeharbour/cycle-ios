@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 
 @class NewWithMapViewController;
 
@@ -15,9 +16,11 @@
 
 @end
 
-@interface NewWithMapViewController : UIViewController
+@interface NewWithMapViewController : UIViewController <MKMapViewDelegate, CLLocationManagerDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, weak) id<PAWWallPostCreateViewControllerDataSource> dataSource;
+
+@property (nonatomic, strong) IBOutlet MKMapView *mapView;
 
 @property (nonatomic, strong) IBOutlet UITextField *name;
 @property (nonatomic, strong) IBOutlet UITextField *rating;

@@ -76,7 +76,7 @@ PAWWallPostCreateViewControllerDataSource>
 	[self loadWallPostsTableViewController];
 	
 	// Set our nav bar items.
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Post"
+	/*self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Post"
 																			  style:UIBarButtonItemStylePlain
 																			 target:self
 																			 action:@selector(postButtonSelected:)];
@@ -84,8 +84,8 @@ PAWWallPostCreateViewControllerDataSource>
 																			 style:UIBarButtonItemStylePlain
 																			target:self
 																			action:@selector(settingsButtonSelected:)];
-	
-	
+	*/
+	self.title = @"Add a location";
 	
 	[self startStandardUpdates];
 }

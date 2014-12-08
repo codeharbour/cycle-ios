@@ -112,7 +112,7 @@ PAWSettingsViewControllerDelegate>
 - (void)presentChoiceViewControllerAnimated:(BOOL)animated {
 	ChoiceViewController *choiceViewController = [[ChoiceViewController alloc] initWithNibName:nil bundle:nil];
 	//wallViewController.delegate = self;
-	[self.navigationController setViewControllers:@[ choiceViewController ] animated:animated];
+	[self.navigationController pushViewController:choiceViewController animated:YES];
 }
 
 - (void)addNew{
@@ -122,9 +122,10 @@ PAWSettingsViewControllerDelegate>
 }
 
 - (void)newWithMap{
+	
 	NewWithMapViewController *newWithMapViewController = [[NewWithMapViewController alloc] initWithNibName:nil bundle:nil];
-	//wallViewController.delegate = self;
-	[self.navigationController setViewControllers:@[ newWithMapViewController ] animated:YES];
+	[self.navigationController pushViewController:newWithMapViewController animated:YES];
+	
 }
 
 #pragma mark Delegate

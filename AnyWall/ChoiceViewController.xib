@@ -24,8 +24,8 @@
                         <action selector="addClick:" destination="-1" eventType="touchUpInside" id="i5p-4E-wcR"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Where are you right now?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Apc-xZ-ylT">
-                    <rect key="frame" x="193" y="32" width="215" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Where are you right now?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Apc-xZ-ylT">
+                    <rect key="frame" x="202.5" y="98" width="196.5" height="20.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
@@ -33,6 +33,8 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstAttribute="centerX" secondItem="Apc-xZ-ylT" secondAttribute="centerX" id="MlU-5L-fHt"/>
+                <constraint firstItem="Apc-xZ-ylT" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="98" id="Ymn-GN-SEf"/>
                 <constraint firstAttribute="centerX" secondItem="7ya-NW-8t3" secondAttribute="centerX" id="mNE-Bh-CPY"/>
                 <constraint firstAttribute="bottom" secondItem="7ya-NW-8t3" secondAttribute="bottom" constant="38" id="p9W-bh-HCP"/>
             </constraints>

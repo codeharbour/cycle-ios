@@ -15,14 +15,14 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fixie" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qWn-5D-Hit">
-                    <rect key="frame" x="245" y="182" width="42" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fixie" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qWn-5D-Hit">
+                    <rect key="frame" x="282" y="184" width="36" height="20.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1mF-mm-SNj">
-                    <rect key="frame" x="245" y="280" width="46" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1mF-mm-SNj">
+                    <rect key="frame" x="285" y="279" width="30" height="30"/>
                     <state key="normal" title="Find">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -30,8 +30,8 @@
                         <action selector="findClick:" destination="-1" eventType="touchUpInside" id="lij-zV-nDZ"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BTo-jX-zzS">
-                    <rect key="frame" x="245" y="349" width="46" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BTo-jX-zzS">
+                    <rect key="frame" x="285" y="348" width="30" height="30"/>
                     <state key="normal" title="Add">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -41,6 +41,14 @@
                 </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="BTo-jX-zzS" firstAttribute="top" secondItem="1mF-mm-SNj" secondAttribute="bottom" constant="39" id="7RY-v5-PCF"/>
+                <constraint firstItem="qWn-5D-Hit" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="184" id="KiF-0u-vuo"/>
+                <constraint firstAttribute="centerX" secondItem="qWn-5D-Hit" secondAttribute="centerX" id="RcW-a8-K7K"/>
+                <constraint firstItem="1mF-mm-SNj" firstAttribute="top" secondItem="qWn-5D-Hit" secondAttribute="bottom" constant="74" id="hd8-6x-gOU"/>
+                <constraint firstAttribute="centerX" secondItem="1mF-mm-SNj" secondAttribute="centerX" id="qTT-YH-G8d"/>
+                <constraint firstAttribute="centerX" secondItem="BTo-jX-zzS" secondAttribute="centerX" id="vkb-BF-ZFr"/>
+            </constraints>
         </view>
     </objects>
 </document>
